@@ -1,7 +1,7 @@
 import './Register.css';
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaGoogle, FaUnlockAlt, FaUser, FaUserAlt } from 'react-icons/fa';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { FaEnvelope, FaUnlockAlt, FaUser, FaUserAlt } from 'react-icons/fa';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form"
 import auth from '../../../firebase.init';
 import { useRef } from 'react';
@@ -17,24 +17,25 @@ function Register() {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
     let unmatchPassword;
     const onSubmit = async (data) => {
       if (data.password !== data.password2) {
         return unmatchPassword = <p className="text-red-500 text-xs italic">Password not massing</p>;
       }
-      await createUserWithEmailAndPassword(data?.mail, data?.password);
-      console.log(data.mail, data.password, data.password2);
+      await createUserWithEmailAndPassword(data?.mail, data?.password, data?.displayName);
+      await updateProfile({ displayName: data?.surname })    
       reset()
     }
 
     let signInError;
-    if (loading ) {
+    if (loading || updating ) {
       return <span className="loading loading-ring loading-lg"></span>
 
     }
-    if (error ) {
-      signInError = <p className="text-red-500 text-xs italic">{error?.message}</p>
+    if (error || updateError) {
+      signInError = <p className="text-red-500 text-xs italic">{error?.message || updateError?.massage}</p>
     }
 
     return (
