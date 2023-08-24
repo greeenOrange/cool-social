@@ -5,7 +5,7 @@ import Home from './Screens/Home/Home'
 import Login from './Partials/Login/Login'
 import Register from './Partials/Register/Register'
 import RequireAuth from './Partials/RequireAuth/RequireAuth'
-import Profile from './Screens/Profile/Profile'
+import UserProfile from './Screens/UserProfile/UserProfile'
 
 function App() {
 
@@ -22,7 +22,7 @@ function App() {
         <Route path="/profile"
           element={
             <RequireAuth>
-              <Profile />
+              <UserProfile />
             </RequireAuth>
           } />
         <Route path="/login" element={<Login />} />

@@ -24,7 +24,7 @@ function Register() {
       if (data.password !== data.password2) {
         return unmatchPassword = <p className="text-red-500 text-xs italic">Password not massing</p>;
       }
-      await createUserWithEmailAndPassword(data?.mail, data?.password, data?.displayName);
+      await createUserWithEmailAndPassword(data?.mail, data?.password);
       await updateProfile({ displayName: data?.surname })    
       reset()
     }
