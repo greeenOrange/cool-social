@@ -6,11 +6,11 @@ function UploadProfile({ setShowUpForm }) {
   const [imageString, setImageStr] = useState('');
   const [preview, setPreview] = useState({ state: false, url: '' });
   const [loading, setLoading] = useState(false);
-  const imgStorageKey = "c0bfd70fa172413d57b27931e84a2431";
+  const imgStorageKey = "c06a76a6d25ba37062571def08b4240f";
   // const { updatePhoto } = useUsers()
   // const { setUser } = useAuth()
   // const { isDark } = useApp();
-  const { formState: { errors }, handleSubmit, reset} = useForm();
+  const { formState: { errors }, handleSubmit, register } = useForm();
 
   const previewFile = (e) => {
     const file = e.target.files[0];
@@ -23,14 +23,12 @@ function UploadProfile({ setShowUpForm }) {
   }
   
   const onSubmit = async (data) => {
-    if (data && data.image && data.image.length > 0) {
-      console.log(data.image.length);
-      const image = data.image[0];
-      console.log(image);
+    console.log(data);
+    if (data && data.image && data?.image.length > 0) {
       const formData = new FormData();
-      formData.append('image', image);
+      formData.append('image', data?.image[0]);
   
-      const url = `https://api.imgbb.com/1/upload=${imgStorageKey}`;
+      const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imgStorageKey}`;
   
       try {
         const response = await fetch(url, {
@@ -76,11 +74,20 @@ function UploadProfile({ setShowUpForm }) {
             <img src={imageString} className="object-cover min-h-full min-w-full" alt="" />
           </div>
         )}
-        <form 
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full mt-4 flex items-center justify-center">
-  
-					<input onChange={previewFile}  className="hidden" type="file" id="post" accept="image/*" />
+        <form
+        className="w-full mt-4 flex items-center justify-center" 
+        onSubmit={handleSubmit(onSubmit)}>
+          <input
+          className="hidden"
+          {...register("image", {
+            required: true 
+          })}
+          onChange={previewFile}
+          type="file"
+          id="post"
+          accept="image/*"
+          />
+
           <input type="submit" />
         </form>
       </div>
